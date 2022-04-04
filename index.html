@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="widrh=device-width,intial-scale=1.0">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>dev.finance$</title>
     <link rel="stylesheet" href="./styles.css">
 </head>
@@ -21,14 +21,14 @@
                     <span>Entradas</span>
                     <img src="./assets/income.svg" alt="Imagem de Entradas">
                 </h3>
-                <p>R$ 5.000,00</p>
+                <p id="incomeDisplay">R$ 5.000,00</p>
             </div>
             <div class="card">
                 <h3>
                     <span>Saídas</span>
                     <img src="./assets/expense.svg" alt="Imagem de Entradas">
                 </h3>
-                <p>R$ 2.000,00</p>
+                <p id="expenseDisplay">R$ 2.000,00</p>
             </div>
             <div class="card total">
                 <h3>
@@ -36,7 +36,7 @@
                     <img src="./assets/total.svg" alt="Imagem de Entradas">
                 </h3>
                 
-                <p>R$ 3.000,00</p>
+                <p id="totalDisplay">R$ 3.000,00</p>
             </div>
         </section>
 
@@ -55,38 +55,8 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="description">Aluguel</td>
-                        <td class="expense">- R$ 1300,00</td>
-                        <td class="date">23/01/2021</td>
-                        <td>
-                            <img src="./assets/minus.svg" alt="Remover Transação">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="description">Internet</td>
-                        <td class="expense">- R$ 200,00</td>
-                        <td class="date">23/01/2021</td>
-                        <td>
-                            <img src="./assets/minus.svg" alt="Remover Transação">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="description">Luz</td>
-                        <td class="expense">- R$ 500,00</td>
-                        <td class="date">23/01/2021</td>
-                        <td>
-                            <img src="./assets/minus.svg" alt="Remover Transação">
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="description">Salário</td>
-                        <td class="income">R$ 5000,00</td>
-                        <td class="date">20/01/2021</td>
-                        <td>
-                            <img src="./assets/minus.svg" alt="Remover Transação">
-                        </td>
-                    </tr>
+                   
+
                 </tbody>
             </table>
         </section>
@@ -158,22 +128,7 @@
     </footer>
 
 
-    <script>
-        const Modal = {
-            open(){
-                // Abre o Modal (add o active)
-                document.querySelector('.modal-overlay')
-                .classList
-                .add('active')
-            },
-            close(){
-                // Fecha o Modal (remove o active)
-                document.querySelector('.modal-overlay')
-                .classList
-                .remove('active')
-            }
-        }
-    </script>
+    <script src="./scripts.js"></script>
     
 </body>
 
