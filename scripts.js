@@ -1,12 +1,12 @@
 const Modal = {
-    open(){
+    open() {
         // Abre o Modal (add o active)
         document
             .querySelector('.modal-overlay')
             .classList
             .add('active')
     },
-    close(){
+    close() {
         // Fecha o Modal (remove o active)
         document
             .querySelector('.modal-overlay')
@@ -15,72 +15,59 @@ const Modal = {
     }
 }
 
-//calcula valor das transacoes
-const Transaction = {
-    all: [
-        {
-            description: 'Aluguel',
-            amount: -130000,
-            date: '23/01/2022'
-        },
-        {
-            description: 'Internet',
-            amount: -20000,
-            date: '23/01/2022'
-        },
-        {
-            description: 'Luz',
-            amount: -50000,
-            date: '23/01/2022'
-        },{
-            description: 'Salário',
-            amount: 500000,
-            date: '20/01/2022'
-        }
-    ],
+const Storage = {
+    get() {
+        return JSON.parse(localStorage.getItem("dev.finances:transactions")) || []
+    },
+    set(transactions) {
+        localStorage.setItem("dev.finances:transactions", JSON.stringify(transactions))
+    }
+}
 
-    add(transaction){
+const Transaction = {
+    all: Storage.get(),
+    
+    add(transaction) {
         Transaction.all.push(transaction)
-        
+
         App.reload()
     },
 
-    remove(index){
+    remove(index) {
         Transaction.all.splice(index, 1)
 
         App.reload()
     },
 
-    incomes(){
+    incomes() {
         let income = 0;
         Transaction.all.forEach(transaction => {
-            if( transaction.amount > 0) {
+            if (transaction.amount > 0) {
                 income += transaction.amount;
             }
         })
         return income
     },
 
-    expenses(){
+    expenses() {
         let expense = 0;
         Transaction.all.forEach(transaction => {
-            if( transaction.amount < 0) {
+            if (transaction.amount < 0) {
                 expense += transaction.amount;
             }
         })
         return expense
     },
 
-    total(){
+    total() {
         return Transaction.incomes() + Transaction.expenses()
     }
 }
 
-
 const Utils = {
     formatCurrency(value) {
         const signal = Number(value) < 0 ? "-" : ""
-        
+
         //   /\D/ -> SELECIONA TUDO QUE NAO É NUMERO
         value = String(value).replace(/\D/g, "")
         value = Number(value) / 100
@@ -91,20 +78,19 @@ const Utils = {
 
         return signal + value
     },
-    formatAmount(value){
+    formatAmount(value) {
         value = Number(value.replace(/\,\./g, "")) * 100
         return value
     },
-    formatDate(date){
+    formatDate(date) {
         const splittedDate = date.split("-")
         return `${splittedDate[2]}/${splittedDate[1]}/${splittedDate[0]}`
     }
 }
 
-
 const DOM = {
     transactionsContainer: document.querySelector('#data-table tbody'),
-    addTransaction(transaction, index){
+    addTransaction(transaction, index) {
         const tr = document.createElement('tr')
         tr.innerHTML = DOM.innerHTMLTransaction(transaction, index)
         tr.dataset.index = index
@@ -115,8 +101,8 @@ const DOM = {
 
         const amount = Utils.formatCurrency(transaction.amount)
 
-        const html = 
-        `
+        const html =
+            `
             <td class="description">${transaction.description}</td>
             <td class="${CSSclass}">${amount}</td>
             <td class="date">${transaction.date}</td>
@@ -137,84 +123,79 @@ const DOM = {
             .getElementById('totalDisplay')
             .innerHTML = Utils.formatCurrency(Transaction.total())
     },
-    clearTransactions(){
+    clearTransactions() {
         DOM.transactionsContainer.innerHTML = ""
     }
 }
-
 
 const Form = {
     description: document.querySelector('input#description'),
     amount: document.querySelector('input#amount'),
     date: document.querySelector('input#date'),
 
-    getValues(){
+    getValues() {
         return {
             description: Form.description.value,
             amount: Form.amount.value,
             date: Form.date.value
         }
     },
-    validadeFields(){
-        const {description, amount, date} = Form.getValues()
+    validadeFields() {
+        const { description, amount, date } = Form.getValues()
 
-        if( description.trim() === "" || 
+        if (description.trim() === "" ||
             amount.trim() === "" ||
-            date.trim() === ""){
-                throw new Error("Por favor, preencha todos os campos")
+            date.trim() === "") {
+            throw new Error("Por favor, preencha todos os campos")
         }
     },
-    formatValues(){
-        let {description, amount, date} = Form.getValues()
+    formatValues() {
+        let { description, amount, date } = Form.getValues()
 
         amount = Utils.formatAmount(amount)
         date = Utils.formatDate(date)
-        
-        return{
+
+        return {
             description,
             amount,
             date
         }
     },
-    clearFields(){
+    clearFields() {
         Form.description.value = ""
         Form.amount.value = ""
         Form.date.value = ""
     },
-    submit(event){
+    submit(event) {
         event.preventDefault()
 
-        try{
+        try {
             Form.validadeFields()
             const transaction = Form.formatValues()
             Transaction.add(transaction)
             App.reload()
             Form.clearFields()
-            Modal.close()  
-        }catch (error) {
+            Modal.close()
+        } catch (error) {
             alert(error.message)
         }
     }
 }
 
 const App = {
-    init(){
-        Transaction.all.forEach(function(transaction, index) {
+    init() {
+        Transaction.all.forEach(function (transaction, index) {
             DOM.addTransaction(transaction, index)
         })
-        
+
         DOM.updateBalance()
-    },
-    reload(){
+
+        Storage.set(Transaction.all)
+    }, 
+    reload() {
         DOM.clearTransactions()
         App.init()
     }
 }
 
-
 App.init()
-
-
-
-
-//video: 2:52:25
